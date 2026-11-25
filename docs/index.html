@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OneApp — 免安装绿色软件库与极速启动器使用手册</title>
+  <meta name="description" content="OneApp 是一款面向 Windows 的免安装绿色软件库、开发项目管理器与极速启动器。支持拖放入库、拼音搜索、多入口启动、实时日志和纯正便携迁移。" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0%25' stop-color='%236366f1'/%3E%3Cstop offset='100%25' stop-color='%232563eb'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cpath d='M25 22l9-6h4v32h-7V24.5l-6 4V22z' fill='%23fff'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg-app: #f5f7fb;
+      --bg-sidebar: #ffffff;
+      --bg-surface: #ffffff;
+      --bg-elevated: #f1f4f9;
+      --bg-code: #eef2f7;
+      --border: #e2e6ef;
+      --border-strong: #cdd4e3;
+      --text-primary: #111827;
+      --text-secondary: #4b5563;
+      --text-muted: #6b7280;
+      --accent: #4f46e5;
+      --accent-hover: #4338ca;
+      --accent-soft: rgba(79, 70, 229, 0.11);
+      --success: #10b981;
+      --success-soft: rgba(16, 185, 129, 0.12);
+      --warning: #d97706;
+      --warning-soft: rgba(245, 158, 11, 0.12);
+      --shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+      --nav-height: 60px;
+    }
+
+    html.dark {
+      --bg-app: #0d0e12;
+      --bg-sidebar: #111319;
+      --bg-surface: #151821;
+      --bg-elevated: #1b1f2b;
+      --bg-code: #0b0c10;
+      --border: #232836;
+      --border-strong: #32394d;
+      --text-primary: #f3f4f6;
+      --text-secondary: #a1a9b8;
+      --text-muted: #788296;
+      --accent: #6366f1;
+      --accent-hover: #818cf8;
+      --accent-soft: rgba(99, 102, 241, 0.16);
+      --success: #34d399;
+      --success-soft: rgba(16, 185, 129, 0.15);
+      --warning: #fbbf24;
+      --warning-soft: rgba(251, 191, 36, 0.14);
+      --shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-height) + 20px); }
+    body {
+      margin: 0;
+      background: var(--bg-app);
+      color: var(--text-primary);
+      font-family: Inter, "Segoe UI Variable", "Segoe UI", "PingFang SC", "Microsoft YaHei UI", sans-serif;
+      font-size: 15px;
+      line-height: 1.72;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: var(--accent-hover); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    code, pre, kbd {
+      font-family: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+    }
+
+    code {
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      padding: 2px 6px;
+      border-radius: 5px;
+      font-size: 0.88em;
+    }
+
+    kbd {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 24px;
+      padding: 1px 7px;
+      font-size: 12px;
+      font-weight: 600;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      box-shadow: inset 0 -1px 0 var(--border-strong);
+    }
+
+    /* Top Header */
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--nav-height);
+      background: rgba(17, 19, 25, 0.86);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    html:not(.dark) .topbar {
+      background: rgba(255, 255, 255, 0.88);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 17px;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .brand:hover { text-decoration: none; }
+    .brand-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+    }
+
+    .topnav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .nav-link {
+      color: var(--text-secondary);
+      font-size: 14px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .nav-link:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      cursor: pointer;
+      transition: transform 0.12s, background 0.15s, border-color 0.15s;
+      text-decoration: none;
+    }
+    .btn:hover { background: var(--bg-elevated); text-decoration: none; }
+    .btn-primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+
+    .mobile-menu-btn { display: none; }
+
+    /* Main Layout */
+    .layout {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 32px;
+      padding: 28px 24px 64px;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: calc(var(--nav-height) + 24px);
+      width: 248px;
+      flex-shrink: 0;
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px 12px;
+      max-height: calc(100vh - var(--nav-height) - 48px);
+      overflow-y: auto;
+    }
+    .sidebar-title {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--text-muted);
+      padding: 4px 10px 8px;
+    }
+    .toc-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .toc-list a {
+      display: block;
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 13.5px;
+      color: var(--text-secondary);
+      transition: all 0.15s;
+    }
+    .toc-list a:hover {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    .toc-list a.active {
+      background: var(--accent-soft);
+      color: var(--accent-hover);
+      font-weight: 600;
+    }
+    .toc-sub {
+      padding-left: 14px;
+      margin: 2px 0 4px;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+    }
+    .toc-sub a { font-size: 13px; padding: 4px 10px; }
+
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    /* Hero Section */
+    .hero {
+      background: linear-gradient(145deg, var(--bg-surface) 0%, var(--bg-elevated) 100%);
+      border: 1px solid var(--border-strong);
+      border-radius: 18px;
+      padding: 36px 36px 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 36px;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--bg-app);
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+    }
+    .pill.accent {
+      background: var(--accent-soft);
+      border-color: rgba(99, 102, 241, 0.35);
+      color: var(--accent-hover);
+    }
+    .hero h1 {
+      margin: 0 0 12px;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+    }
+    .hero-sub {
+      margin: 0 0 22px;
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 780px;
+    }
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 26px;
+    }
+
+    /* Interactive Preview Switcher */
+    .preview-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .preview-tab {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-app);
+      color: var(--text-secondary);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .preview-tab:hover { color: var(--text-primary); }
+    .preview-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+    .preview-stage {
+      background: var(--bg-app);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 14px;
+      text-align: center;
+    }
+    .preview-stage img {
+      max-width: 100%;
+      max-height: 540px;
+      width: auto;
+      height: auto;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      display: inline-block;
+    }
+    .preview-caption {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* Section & Cards */
+    section.doc-section {
+      margin-bottom: 48px;
+      scroll-margin-top: calc(var(--nav-height) + 20px);
+    }
+    section.doc-section h2 {
+      font-size: 24px;
+      margin: 0 0 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    section.doc-section h3 {
+      font-size: 18.5px;
+      margin: 28px 0 12px;
+      color: var(--text-primary);
+    }
+    section.doc-section h4 {
+      font-size: 15.5px;
+      margin: 18px 0 8px;
+      color: var(--text-primary);
+    }
+    p { margin: 0 0 14px; color: var(--text-secondary); }
+    ul, ol { margin: 0 0 16px; padding-left: 22px; color: var(--text-secondary); }
+    li { margin-bottom: 6px; }
+    strong { color: var(--text-primary); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin: 16px 0 22px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      margin: 16px 0 22px;
+    }
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .card-title {
+      font-size: 15.5px;
+      font-weight: 700;
+      margin: 0 0 8px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .card p:last-child { margin-bottom: 0; font-size: 14px; }
+
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 8px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .callout {
+      border-radius: 12px;
+      padding: 15px 18px;
+      margin: 18px 0;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      background: var(--accent-soft);
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+    .callout.warn {
+      border-color: rgba(245, 158, 11, 0.35);
+      background: var(--warning-soft);
+    }
+    .callout.success {
+      border-color: rgba(16, 185, 129, 0.35);
+      background: var(--success-soft);
+    }
+
+    /* Tables */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 16px 0 24px;
+      background: var(--bg-surface);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      text-align: left;
+      padding: 11px 14px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    tr:last-child td { border-bottom: none; }
+    td { color: var(--text-secondary); }
+
+    /* Screenshots */
+    .shot-figure {
+      margin: 18px 0 24px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 14px;
+      padding: 12px;
+      box-shadow: var(--shadow);
+    }
+    .shot-figure img {
+      width: 100%;
+      height: auto;
+      display: block;
+      border-radius: 9px;
+      cursor: zoom-in;
+    }
+    .shot-caption {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-align: center;
+    }
+    .shot-pair {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+      margin: 18px 0 24px;
+    }
+    .shot-pair .shot-figure {
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .shot-pair .shot-figure img {
+      max-width: 368px;
+      width: 100%;
+    }
+
+    /* Code Blocks */
+    .code-block {
+      position: relative;
+      margin: 14px 0 22px;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-code);
+      overflow: hidden;
+    }
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-elevated);
+      font-size: 12.5px;
+      color: var(--text-muted);
+    }
+    .copy-btn {
+      padding: 3px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .copy-btn:hover { border-color: var(--accent); color: var(--accent-hover); }
+    .code-block pre {
+      margin: 0;
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--text-primary);
+    }
+
+    /* FAQ Accordion */
+    details.faq-item {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 12px;
+      overflow: hidden;
+    }
+    details.faq-item summary {
+      padding: 14px 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    details.faq-item summary::-webkit-details-marker { display: none; }
+    details.faq-item summary::after {
+      content: "＋";
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+    details.faq-item[open] summary::after { content: "－"; color: var(--accent-hover); }
+    details.faq-item .faq-body {
+      padding: 0 18px 16px;
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      font-size: 14.5px;
+      color: var(--text-secondary);
+    }
+
+    /* Lightbox */
+    .lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: rgba(5, 6, 10, 0.88);
+      backdrop-filter: blur(6px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .lightbox.open { display: flex; }
+    .lightbox img {
+      max-width: 94vw;
+      max-height: 84vh;
+      border-radius: 12px;
+      border: 1px solid var(--border-strong);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+    }
+    .lightbox-cap {
+      margin-top: 12px;
+      color: #e5e7eb;
+      font-size: 14px;
+    }
+    .lightbox-close {
+      position: fixed;
+      top: 18px;
+      right: 22px;
+      width: 38px;
+      height: 38px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(20, 22, 30, 0.8);
+      color: #fff;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    footer.site-footer {
+      border-top: 1px solid var(--border);
+      padding: 24px 0 8px;
+      margin-top: 40px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 12px;
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { display: none; }
+      .sidebar.mobile-open {
+        display: block;
+        position: fixed;
+        left: 16px;
+        right: 16px;
+        top: calc(var(--nav-height) + 10px);
+        width: auto;
+        z-index: 60;
+        box-shadow: var(--shadow);
+      }
+      .mobile-menu-btn { display: inline-flex; }
+      .nav-link { display: none; }
+    }
+    @media (max-width: 760px) {
+      .grid-2, .grid-3, .shot-pair { grid-template-columns: 1fr; }
+      .hero { padding: 24px 18px; }
+      .layout { padding: 18px 14px 48px; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button type="button" class="btn mobile-menu-btn" id="menuToggle" aria-label="展开目录">☰ 目录</button>
+      <a class="brand" href="#top">
+        <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true">
+          <defs><linearGradient id="logoGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#2563eb"/></linearGradient></defs>
+          <rect width="64" height="64" rx="14" fill="url(#logoGrad)"/>
+          <path d="M25 22l9-6h4v32h-7V24.5l-6 4V22z" fill="#fff"/>
+        </svg>
+        <span>OneApp</span>
+        <span class="brand-badge">用户使用手册</span>
+      </a>
+    </div>
+
+    <div class="topnav-actions">
+      <a class="nav-link" href="#quickstart">快速上手</a>
+      <a class="nav-link" href="#features">详细教程</a>
+      <a class="nav-link" href="#faq">常见问题</a>
+      <a class="nav-link" href="#build">源码编译</a>
+      <button type="button" class="btn" id="themeToggle" title="切换深色/浅色主题">☀️ 浅色</button>
+      <a class="btn btn-primary" href="https://github.com/backbay2-yzg/OneApp" target="_blank" rel="noopener">GitHub 源码</a>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-title">目录导航</div>
+      <ul class="toc-list" id="tocList">
+        <li><a href="#why">1. 为什么需要 OneApp？</a></li>
+        <li><a href="#quickstart">2. 3 步快速上手（小白必看）</a></li>
+        <li>
+          <a href="#features">3. 详细功能使用手册</a>
+          <ul class="toc-sub">
+            <li><a href="#main-window">3.1 管理主窗口</a></li>
+            <li><a href="#launcher">3.2 极速启动条 (Alt+Space)</a></li>
+            <li><a href="#tray">3.3 托盘快捷浮窗</a></li>
+            <li><a href="#projects">3.4 源码项目与前置构建</a></li>
+            <li><a href="#drawer">3.5 图标 / 多入口 / 笔记 / 日志</a></li>
+            <li><a href="#settings">3.6 设置与全局热键</a></li>
+          </ul>
+        </li>
+        <li><a href="#portable">4. 绿色便携与换电脑搬家</a></li>
+        <li><a href="#faq">5. 常见问题 FAQ</a></li>
+        <li><a href="#build">6. 开发者从源码编译</a></li>
+        <li><a href="#roadmap">7. 设计文档与后续规划</a></li>
+      </ul>
+    </aside>
+
+    <main class="content">
+      <!-- HERO -->
+      <section class="hero">
+        <div class="hero-badges">
+          <span class="pill accent">Windows 10 / 11</span>
+          <span class="pill">Go 1.26 零 CGO</span>
+          <span class="pill">Wails v3.1 + React 18</span>
+          <span class="pill">纯本地 SQLite · 绿色便携</span>
+        </div>
+        <h1>把散落的绿色软件与开发项目，装进一个快捷键秒开的便携盒</h1>
+        <p class="hero-sub">
+          <strong>OneApp</strong> 是专为桌面重度用户与开发者打造的免安装软件管家：拖入 <code>.exe</code>、文件夹或 <code>.zip/.7z</code> 自动入库，按 <kbd>Alt</kbd> + <kbd>Space</kbd> 敲拼音首字母秒开，还能一键构建并追踪 Electron / Node / Python / Go 项目日志。
+        </p>
+        <div class="hero-cta">
+          <a class="btn btn-primary" href="#quickstart">🚀 3 步快速上手</a>
+          <a class="btn" href="#build">🛠️ 从源码编译</a>
+          <a class="btn" href="https://github.com/backbay2-yzg/OneApp" target="_blank" rel="noopener">⭐ 查看 GitHub 仓库</a>
+        </div>
+
+        <div class="preview-tabs" id="previewTabs">
+          <button type="button" class="preview-tab active" data-src="./screenshots/01-main-overview.png" data-cap="管理主窗口：左侧智能视图/分类/标签，中间卡片/列表双视图，右侧详情抽屉">管理主窗口</button>
+          <button type="button" class="preview-tab" data-src="./screenshots/07-launcher-search.png" data-cap="极速启动条：Alt+Space 全局秒弹，支持拼音首字母、别名、#标签、@分类与右侧笔记预览">极速启动条</button>
+          <button type="button" class="preview-tab" data-src="./screenshots/09-tray-popover.png" data-cap="托盘快捷浮窗：左键单击系统托盘弹出，支持固定连续启动与鼠标一点即开">托盘快捷浮窗</button>
+          <button type="button" class="preview-tab" data-src="./screenshots/03-create-command-modal.png" data-cap="项目与启动命令：仅链接源码目录，支持产物缺失时自动构建与无黑窗日志捕获">源码项目接入</button>
+        </div>
+        <div class="preview-stage">
+          <img id="previewImg" src="./screenshots/01-main-overview.png" alt="OneApp 界面预览" class="zoomable" />
+          <div class="preview-caption" id="previewCap">管理主窗口：左侧智能视图/分类/标签，中间卡片/列表双视图，右侧详情抽屉（点击图片可放大）</div>
+        </div>
+      </section>
+
+      <!-- 1. WHY -->
+      <section class="doc-section" id="why">
+        <h2>1. 为什么需要 OneApp？</h2>
+        <div class="grid-2">
+          <div class="card">
+            <h3 class="card-title">📦 告别绿色软件满盘乱飞</h3>
+            <p>把桌面、下载目录里零散的 <code>.exe</code>、绿色整包和 <code>.zip/.7z</code> 压缩包直接拖进 OneApp，自动解压、自动剥离多余套壳目录、自动识别主程序与图标。</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">⚡ 按一下 Alt+Space 拼音秒开</h3>
+            <p>记不住英文名？直接敲中文全拼（<code>jietu</code>）或拼音首字母（<code>jt</code>）就能命中工具；还能用 <code>#标签</code>、<code>@分类</code>、<code>:running</code> 精确过滤。</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">🧑‍💻 开发中的项目也能免打包直启</h3>
+            <p>自动识别 Electron / Node 项目并生成多入口；支持“产物缺失时自动构建”与隐藏黑窗实时捕获 stdout/stderr 日志。</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">🧳 整个文件夹拷走就能换电脑</h3>
+            <p>所有数据存在同目录 <code>data/</code>，托管软件使用相对路径存在 <code>library/</code>。整包拷贝进 U 盘或同步盘，换任何盘符打开零损坏。</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. QUICKSTART -->
+      <section class="doc-section" id="quickstart">
+        <h2>2. 3 步快速上手（小白零门槛）</h2>
+        <div class="grid-3">
+          <div class="card">
+            <h3 class="card-title"><span class="step-badge">1</span> 双击打开 OneApp</h3>
+            <p>运行 <code>OneApp.exe</code>，程序会自动在同目录生成 <code>data/</code>、<code>library/</code> 以及「自研工具」「效率工具」「系统调试」3 个默认分类。关闭主窗口默认最小化到右下角系统托盘。</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title"><span class="step-badge">2</span> 拖入软件或压缩包</h3>
+            <p>把任意 <code>.exe</code>、绿色文件夹、<code>.zip/.7z</code>、<code>.bat/.ps1</code>、<code>.lnk</code> 或源码目录拖进窗口松手，或点击右上角 <strong>添加文件 / 添加目录</strong>。</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title"><span class="step-badge">3</span> 随时随地一键启动</h3>
+            <p>在主窗口双击卡片启动；或在任何界面按 <kbd>Alt</kbd>+<kbd>Space</kbd> 搜着开；也可以左键单击托盘图标，在浮窗里点着开。</p>
+          </div>
+        </div>
+
+        <figure class="shot-figure">
+          <img src="./screenshots/02-ingest-modal.png" alt="确认入库软件与项目弹窗" class="zoomable" />
+          <figcaption class="shot-caption">拖入文件夹、源码项目或 .zip/.7z 压缩包后，会自动弹出「确认入库」面板，为你选好主入口、子入口和存储模式</figcaption>
+        </figure>
+
+        <div class="callout">
+          <strong>💡 小白必看：入库时的 3 种存储方式怎么选？</strong>
+          <ul style="margin:8px 0 0;">
+            <li><strong>复制入托管库 / 解压入库（默认推荐）</strong>：把软件复制（或将压缩包解压）到 <code>OneApp/library/apps/</code> 内，原文件保留不动，最安全。</li>
+            <li><strong>移动入托管库</strong>：直接把原文件夹搬进 <code>library/apps/</code> 并清理桌面/下载目录的散落文件，省空间不重复。</li>
+            <li><strong>仅链接原路径</strong>：文件留在原处不动，OneApp 只记录路径——适合<strong>还在不断改代码的源码项目</strong>或体积很大的软件。</li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- 3. DETAILED FEATURES -->
+      <section class="doc-section" id="features">
+        <h2>3. 详细功能使用手册</h2>
+
+        <!-- 3.1 Main Window -->
+        <h3 id="main-window">3.1 管理主窗口：收纳、整理与一键启动</h3>
+        <p>主窗口采用三栏式布局，兼顾整理分类与高频启动：</p>
+        <ul>
+          <li><strong>左侧导航栏</strong>：包含智能视图（<strong>全部软件</strong>、<strong>收藏置顶</strong>、<strong>正在运行</strong>实时绿标计数）、自定义分类（点 <code>+</code> 新建、悬停可删除）、标签过滤云，以及左下角的<strong>设置与热键</strong>入口（热键冲突时会在此提示）。</li>
+          <li><strong>中间工作区</strong>：支持关键词实时筛选、4 种排序（<code>智能排序</code> / <code>名称排序</code> / <code>启动次数</code> / <code>最近添加</code>）、<strong>卡片网格 / 高密度列表</strong>一键切换，全工作区支持系统文件拖放。</li>
+          <li><strong>快捷操作</strong>：鼠标双击卡片直接启动，或点击卡片右上角蓝色播放图标直接启动；单击选中则在右侧抽屉查看详细配置。</li>
+        </ul>
+        <figure class="shot-figure">
+          <img src="./screenshots/01-main-overview.png" alt="管理主窗口" class="zoomable" />
+          <figcaption class="shot-caption">管理主窗口全景：三栏结构一目了然，绿色圆点提示当前正在运行的程序</figcaption>
+        </figure>
+
+        <!-- 3.2 Launcher -->
+        <h3 id="launcher">3.2 极速启动条（Alt + Space）：敲拼音 1 秒找到并启动</h3>
+        <p>无论你正在干什么，按下全局热键 <kbd>Alt</kbd> + <kbd>Space</kbd> 就能在屏幕正中间呼出极速启动条。即使不打字，也会自动把收藏置顶、正在运行、最近使用的软件排在最前面。</p>
+        <figure class="shot-figure">
+          <img src="./screenshots/07-launcher-search.png" alt="极速启动条搜索与预览" class="zoomable" />
+          <figcaption class="shot-caption">极速启动条左侧展示实时匹配结果与运行状态，右侧直接预览该软件的简介、Markdown 个人笔记与可用入口</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>搜索写法</th><th>说明</th><th>实际示例</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>名称 / 英文模糊</strong></td><td>支持完整名称、前缀、子串及隔字模糊序列匹配</td><td>输入 <code>snip</code> 命中 <code>SnipFlow 截图标注</code></td></tr>
+              <tr><td><strong>中文全拼 / 首字母</strong></td><td>自动为中文名称建好拼音索引，免切英文直接搜</td><td>输入 <code>jietu</code> 或 <code>jt</code> 命中「截图」</td></tr>
+              <tr><td><strong>自定义别名</strong></td><td>在详情中设置的短别名享有最高匹配优先级</td><td>给工具设别名 <code>dd</code>，敲 <code>dd</code> 秒出</td></tr>
+              <tr><td><code>#标签</code> / <code>@分类</code></td><td>按标签或分类过滤，支持与关键词空格组合</td><td><code>#CLI 端口</code> 或 <code>@自研</code></td></tr>
+              <tr><td><code>:running</code> / <code>:pinned</code></td><td>仅显示正在运行中或收藏置顶的软件</td><td>输 <code>:running</code> 快速关闭/重启后台工具</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p>选中任意软件后按一下 <kbd>Tab</kbd> 键，右侧面板立即切换为<strong>二级动作菜单</strong>，可选择子入口、管理员运行、带临时参数运行、打开目录/终端、复制路径、重启或结束进程、跳回主窗口编辑等：</p>
+        <figure class="shot-figure">
+          <img src="./screenshots/08-launcher-actions.png" alt="极速启动条 Tab 二级动作" class="zoomable" />
+          <figcaption class="shot-caption">按 Tab 展开二级动作面板：不回主窗口就能切换子入口、追加临时命令行参数或一键结束运行中的进程</figcaption>
+        </figure>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>快捷键</th><th>对应功能</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><kbd>Alt</kbd> + <kbd>Space</kbd></td><td>在任意应用之上呼出 / 隐藏极速启动条</td></tr>
+              <tr><td><kbd>↑</kbd> / <kbd>↓</kbd></td><td>上下移动选中软件或动作项</td></tr>
+              <tr><td><kbd>Enter</kbd></td><td>启动选中软件的主入口（或执行选中动作）并自动隐藏</td></tr>
+              <tr><td><kbd>Ctrl</kbd> + <kbd>Enter</kbd></td><td>以 Windows 管理员身份（UAC 提权）启动选中软件</td></tr>
+              <tr><td><kbd>Tab</kbd></td><td>在「右侧信息预览」与「二级动作菜单」之间切换</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>退回上级：临时参数 → 搜索列表 → 清空关键词 → 隐藏启动条</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- 3.3 Tray Popover -->
+        <h3 id="tray">3.3 托盘快捷浮窗与托盘菜单：鼠标党最顺手的小弹窗</h3>
+        <p>左键单击右下角系统托盘的 OneApp 图标，即可贴着任务栏弹出轻量<strong>托盘快捷浮窗</strong>：</p>
+        <ul>
+          <li><strong>三大标签</strong>：<code>快捷</code>（正在运行 → 收藏置顶 → 最近使用）、<code>运行中</code>（点右侧绿色方框 ■ 一键结束进程）、<code>全部</code>（支持按分类胶囊筛选）。</li>
+          <li><strong>图钉固定模式</strong>：点亮右上角图钉 📌，连续启动多个软件时浮窗不会自动收起。</li>
+          <li><strong>支持直接拖入</strong>：直接把桌面文件拖进这个小浮窗即可解析入库。</li>
+          <li><strong>更多操作面板</strong>：右键行或点右侧 <code>...</code> 展开底部面板（右图），快速切换子入口、管理员运行或管理进程。</li>
+        </ul>
+
+        <div class="shot-pair">
+          <figure class="shot-figure">
+            <img src="./screenshots/09-tray-popover.png" alt="托盘快捷浮窗" class="zoomable" />
+            <figcaption class="shot-caption">左键单击托盘图标呼出：快捷 / 运行中 / 全部三标签与搜索栏</figcaption>
+          </figure>
+          <figure class="shot-figure">
+            <img src="./screenshots/10-tray-action-sheet.png" alt="托盘快捷浮窗操作面板" class="zoomable" />
+            <figcaption class="shot-caption">右键或点击 ... 展开操作面板：支持子入口、提权与进程控制</figcaption>
+          </figure>
+        </div>
+
+        <!-- 3.4 Projects & Commands -->
+        <h3 id="projects">3.4 源码项目与自定义命令：开发中的项目也能一键构建启动</h3>
+        <p>点击主窗口右上角的 <strong>「添加项目/命令」</strong>（或直接把源码目录拖入窗口），即可用「仅链接原路径」模式纳管本地研发项目：</p>
+        <ul>
+          <li><strong>Electron / Node 自动识别</strong>：自动探测 <code>pnpm</code> / <code>yarn</code> / <code>bun</code> / <code>npm</code>，自动提取图标，并为 Electron 项目一键生成「直接启动 (Electron)」「重新构建并启动」「开发模式 (dev)」3 个入口。</li>
+          <li><strong>自定义命令 &amp; 前置构建</strong>：Python / Go / Rust 等项目可填任意启动命令，并支持配置 <code>产物缺失时自动构建</code>（指定检测文件路径如 <code>out/main/index.js</code>）或 <code>每次启动前构建</code>。</li>
+          <li><strong>无黑窗日志捕获</strong>：勾选「隐藏控制台黑窗并捕获运行日志」，运行期间所有控制台输出都直接显示在 OneApp 右侧抽屉里。</li>
+        </ul>
+        <figure class="shot-figure">
+          <img src="./screenshots/03-create-command-modal.png" alt="添加项目与启动命令弹窗" class="zoomable" />
+          <figcaption class="shot-caption">添加项目 / 启动命令弹窗：支持任意命令行、工作目录与前置构建规则配置</figcaption>
+        </figure>
+
+        <!-- 3.5 Detail Drawer -->
+        <h3 id="drawer">3.5 详情抽屉深度配置：图标、多入口、笔记与实时日志</h3>
+        <p>在右侧详情抽屉中，你可以对每个软件进行全方位的细致设置（鼠标悬停在左上角图标上还可<strong>自定义图标</strong>或<strong>重新提取图标</strong>）：</p>
+
+        <h4>① 多入口与运行参数模板</h4>
+        <p>支持 <code>exe</code>、<code>command</code>、<code>bat</code>、<code>cmd</code>、<code>ps1</code>、<code>lnk</code> 共 6 种入口类型，可添加无限多个入口并指定主入口。支持环境变量注入以及 3 个便携路径占位符：<code>{{APP_DIR}}</code>（软件目录）、<code>{{ENTRY_DIR}}</code>（入口目录）、<code>{{ONEAPP_DIR}}</code>（OneApp 根目录）。</p>
+        <figure class="shot-figure">
+          <img src="./screenshots/04-detail-entries.png" alt="详情抽屉多入口配置" class="zoomable" />
+          <figcaption class="shot-caption">多入口配置界面：每个入口均可独立设定命令行参数、前置构建、环境变量、隐藏黑窗与默认管理员运行</figcaption>
+        </figure>
+
+        <h4>② 个人使用笔记（Markdown）</h4>
+        <p>随时记录软件常用参数、快捷键或配置路径，支持预览渲染，并会自动同步显示在极速启动条右侧面板。</p>
+        <figure class="shot-figure">
+          <img src="./screenshots/05-detail-notes.png" alt="个人 Markdown 笔记" class="zoomable" />
+          <figcaption class="shot-caption">个人笔记支持 Markdown 语法与实时预览，再也不怕忘记半年前自研工具怎么传参</figcaption>
+        </figure>
+
+        <h4>③ 实时构建与运行日志</h4>
+        <p>当启用「隐藏黑窗」或触发「前置构建」时，OneApp 会实时流式捕获最近 500 行 stdout/stderr 输出，并提供状态徽章、一键复制和清空功能。</p>
+        <figure class="shot-figure">
+          <img src="./screenshots/06-detail-logs.png" alt="实时构建与运行日志" class="zoomable" />
+          <figcaption class="shot-caption">运行日志标签页：完整记录前置构建耗时、实际执行命令行与程序实时输出</figcaption>
+        </figure>
+
+        <!-- 3.6 Settings -->
+        <h3 id="settings">3.6 设置与全局热键：按你的习惯定制 OneApp</h3>
+        <figure class="shot-figure">
+          <img src="./screenshots/11-settings-modal.png" alt="设置与全局热键弹窗" class="zoomable" />
+          <figcaption class="shot-caption">设置与全局热键弹窗：一键切换热键预设、默认入库模式、主题、托盘点击行为与开机静默自启</figcaption>
+        </figure>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>设置项</th><th>默认值</th><th>作用说明</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>极速启动条全局快捷键</strong></td><td><code>Alt+Space</code></td><td>自定义热键或点预设按钮；实时检测与其他软件的热键冲突状态</td></tr>
+              <tr><td><strong>默认拖入存储方式</strong></td><td>复制入托管库</td><td>设置拖入窗口时默认选中的方式（复制 / 移动 / 仅链接）</td></tr>
+              <tr><td><strong>界面主题</strong></td><td>跟随系统</td><td>可选跟随系统、深色模式、浅色模式，三窗口实时同步切换</td></tr>
+              <tr><td><strong>托盘左键点击动作</strong></td><td>打开托盘快捷浮窗</td><td>可改为直接打开管理主窗口或呼出极速启动条</td></tr>
+              <tr><td><strong>拖入文件时静默入库</strong></td><td>关闭</td><td>开启后拖入单个软件/压缩包跳过确认框直接按默认规则入库（源码项目仍会弹窗确认）</td></tr>
+              <tr><td><strong>极速启动条显示右侧预览</strong></td><td>开启</td><td>关闭后启动条仅保留简洁搜索列表，按 <kbd>Tab</kbd> 仍可展开动作面板</td></tr>
+              <tr><td><strong>关闭主窗口最小化到托盘</strong></td><td>开启</td><td>关闭主窗口后留在托盘后台待命，随时按热键秒呼</td></tr>
+              <tr><td><strong>Windows 开机自动启动</strong></td><td>关闭</td><td>开启后以 <code>--silent</code> 参数开机静默驻留系统托盘，不弹窗打扰</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. PORTABLE -->
+      <section class="doc-section" id="portable">
+        <h2>4. 绿色便携目录结构与换电脑搬家指南</h2>
+        <p>OneApp 自身免安装且默认便携。所有数据与默认托管软件都在同级目录下：</p>
+        <div class="code-block">
+          <div class="code-header"><span>OneApp 绿色便携目录布局</span></div>
+          <pre>OneApp/
+├── OneApp.exe                  # 主程序（单文件已内嵌全部前端界面）
+├── data/                       # 本地运行时数据
+│   ├── oneapp.db               # SQLite 主数据库（纯 Go 驱动 + WAL 模式）
+│   ├── settings.json           # 个人设置（热键、主题、默认存储方式等）
+│   ├── icons/                  # 提取缓存的高清 PNG 图标
+│   ├── cache/                  # 临时缓存目录
+│   ├── backups/                # 预留备份目录
+│   └── logs/                   # 运行日志目录
+└── library/                    # 默认托管软件库
+    └── apps/
+        ├── snipflow-a1b2c3/    # 托管软件独立目录（数据库仅存相对路径）
+        └── portscan-3f7e2a/</pre>
+        </div>
+        <div class="callout success">
+          <strong>🧳 换电脑搬家只要 2 步：</strong>先右键系统托盘选择「退出 OneApp」，然后直接把整个 <code>OneApp/</code> 文件夹复制到 U 盘、移动硬盘或新电脑的任意盘符下双击 <code>OneApp.exe</code> 即可。所有托管软件、图标、多入口、参数与笔记<strong>零损坏原样复活</strong>！
+        </div>
+      </section>
+
+      <!-- 5. FAQ -->
+      <section class="doc-section" id="faq">
+        <h2>5. 常见问题 FAQ（小白排障）</h2>
+
+        <details class="faq-item">
+          <summary>1. 按下 Alt + Space 没反应，或提示快捷键冲突怎么办？</summary>
+          <div class="faq-body">
+            通常是因为电脑上的 PowerToys Run、uTools、Listary 或输入法先占用了 <code>Alt+Space</code>。打开主窗口左下角「设置与热键」，点击其他预设（如 <code>Alt+Q</code>、<code>Ctrl+Alt+Space</code>、<code>Ctrl+Shift+Space</code>）或自行输入新快捷键并保存即可。
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>2. 为什么我把文件拖到 OneApp 窗口里没反应（显示禁止图标）？</summary>
+          <div class="faq-body">
+            这是 Windows 的 UIPI 安全隔离机制：如果 OneApp 主程序以管理员权限运行，普通权限的桌面/资源管理器就无法把文件拖进去。<strong>解决办法：</strong>不要以管理员身份启动 OneApp 本体；只有当某个被管理的工具需要提权时，才在入口勾选「默认管理员」或启动时按 <kbd>Ctrl</kbd> + <kbd>Enter</kbd> 按需提权。
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>3. 导入 Electron 项目后启动提示找不到 electron.exe 怎么办？</summary>
+          <div class="faq-body">
+            这说明该项目目录下还没有安装依赖。在该项目文件夹打开终端运行一次 <code>pnpm install</code>（或 <code>npm install</code>），依赖就绪后即可在 OneApp 中直接秒开。
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>4. 脚本或命令行项目启动后看不到输出、或者闪退怎么排查？</summary>
+          <div class="faq-body">
+            在右侧详情抽屉切换到「入口」标签，勾选 <strong>隐藏黑窗</strong> 并保存，再次启动后切换到 <strong>运行日志</strong> 标签页，就能看到完整执行的命令和实时报错信息。
+          </div>
+        </details>
+
+        <details class="faq-item">
+          <summary>5. 点右上角 × 关不掉程序怎么办？</summary>
+          <div class="faq-body">
+            为了让你随时能按 <kbd>Alt</kbd> + <kbd>Space</kbd> 秒呼启动条，默认开启了关闭最小化到托盘。如需彻底退出，右键点击屏幕右下角系统托盘里的 OneApp 图标选择「退出 OneApp」，或在托盘快捷浮窗右下角点「退出」即可。
+          </div>
+        </details>
+      </section>
+
+      <!-- 6. BUILD -->
+      <section class="doc-section" id="build">
+        <h2>6. 开发者：从源码编译与运行</h2>
+        <p><strong>环境要求：</strong>Windows 10/11（WebView2 Runtime）、Go 1.26+（<strong>纯 Go 零 CGO</strong>，无需 GCC/MinGW）、Node.js 20+、pnpm、Wails v3 CLI（<code>v3.1.0</code>）。</p>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>PowerShell 一键构建命令</span>
+            <button type="button" class="copy-btn" data-copy="buildCmd">复制命令</button>
+          </div>
+          <pre id="buildCmd">git clone https://github.com/backbay2-yzg/OneApp.git
+cd OneApp
+go install github.com/wailsapp/wails/v3/cmd/wails3@latest
+wails3 generate bindings -ts -i
+cd frontend &amp;&amp; pnpm install &amp;&amp; pnpm build &amp;&amp; cd ..
+go build -ldflags "-H windowsgui -s -w" -o build/bin/OneApp.exe .</pre>
+        </div>
+
+        <div class="code-block">
+          <div class="code-header">
+            <span>运行 Go 单元测试</span>
+            <button type="button" class="copy-btn" data-copy="testCmd">复制命令</button>
+          </div>
+          <pre id="testCmd">go test ./...</pre>
+        </div>
+      </section>
+
+      <!-- 7. ROADMAP -->
+      <section class="doc-section" id="roadmap">
+        <h2>7. 设计文档与后续规划</h2>
+        <p>想了解产品完整设计与后续演进路线，欢迎阅读仓库内置设计文档：</p>
+        <ul>
+          <li>📋 <a href="https://github.com/backbay2-yzg/OneApp/blob/main/docs/PRD.md" target="_blank" rel="noopener">产品需求文档 (docs/PRD.md)</a></li>
+          <li>🏗️ <a href="https://github.com/backbay2-yzg/OneApp/blob/main/docs/ARCHITECTURE.md" target="_blank" rel="noopener">系统架构与工程路线图 (docs/ARCHITECTURE.md)</a></li>
+        </ul>
+        <p>后续规划能力包括：GitHub Release 链接直拉与 Windows 资产智能筛选（含私有库 Token 与代理）、配置零丢失升级（Install Manifest Diff + 历史备份一键回滚）、批量文件夹扫描导入向导、单软件独立全局热键以及轻量换机清单导出与恢复。</p>
+      </section>
+
+      <footer class="site-footer">
+        <span>OneApp · Portable Software Library &amp; Instant Launcher</span>
+        <span>
+          <a href="https://github.com/backbay2-yzg/OneApp" target="_blank" rel="noopener">GitHub: backbay2-yzg/OneApp</a>
+        </span>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Lightbox Modal -->
+  <div class="lightbox" id="lightbox">
+    <button type="button" class="lightbox-close" id="lightboxClose" aria-label="关闭大图">×</button>
+    <img id="lightboxImg" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="放大截图" />
+    <div class="lightbox-cap" id="lightboxCap"></div>
+  </div>
+
+  <script>
+    (function () {
+      const root = document.documentElement;
+      const themeBtn = document.getElementById("themeToggle");
+      function syncThemeLabel() {
+        const isDark = root.classList.contains("dark");
+        themeBtn.textContent = isDark ? "☀️ 浅色" : "🌙 深色";
+      }
+      syncThemeLabel();
+      themeBtn.addEventListener("click", function () {
+        root.classList.toggle("dark");
+        syncThemeLabel();
+      });
+
+      // Mobile sidebar toggle
+      const menuBtn = document.getElementById("menuToggle");
+      const sidebar = document.getElementById("sidebar");
+      menuBtn.addEventListener("click", function () {
+        sidebar.classList.toggle("mobile-open");
+      });
+      sidebar.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+          sidebar.classList.remove("mobile-open");
+        });
+      });
+
+      // Hero interactive preview switcher
+      const previewImg = document.getElementById("previewImg");
+      const previewCap = document.getElementById("previewCap");
+      document.querySelectorAll("#previewTabs .preview-tab").forEach(function (tab) {
+        tab.addEventListener("click", function () {
+          document.querySelectorAll("#previewTabs .preview-tab").forEach(function (t) {
+            t.classList.remove("active");
+          });
+          tab.classList.add("active");
+          previewImg.src = tab.getAttribute("data-src");
+          previewCap.textContent = tab.getAttribute("data-cap") + "（点击图片可放大）";
+        });
+      });
+
+      // Lightbox zoom
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightboxImg");
+      const lightboxCap = document.getElementById("lightboxCap");
+      const lightboxClose = document.getElementById("lightboxClose");
+
+      function openLightbox(src, caption) {
+        lightboxImg.src = src;
+        lightboxCap.textContent = caption || "";
+        lightbox.classList.add("open");
+      }
+      function closeLightbox() {
+        lightbox.classList.remove("open");
+      }
+      document.querySelectorAll("img.zoomable").forEach(function (img) {
+        img.addEventListener("click", function () {
+          const fig = img.closest("figure");
+          const capEl = fig ? fig.querySelector("figcaption") : null;
+          const cap = capEl ? capEl.textContent : img.id === "previewImg" ? previewCap.textContent : img.alt;
+          openLightbox(img.src, cap);
+        });
+      });
+      lightboxClose.addEventListener("click", closeLightbox);
+      lightbox.addEventListener("click", function (e) {
+        if (e.target === lightbox) closeLightbox();
+      });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeLightbox();
+      });
+
+      // Copy code buttons
+      document.querySelectorAll(".copy-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+          const targetId = btn.getAttribute("data-copy");
+          const el = document.getElementById(targetId);
+          if (!el) return;
+          const text = el.textContent;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function () {
+              const old = btn.textContent;
+              btn.textContent = "已复制 ✓";
+              setTimeout(function () { btn.textContent = old; }, 1600);
+            });
+          }
+        });
+      });
+
+      // Scrollspy for TOC
+      const tocLinks = Array.from(document.querySelectorAll("#tocList a"));
+      const sections = tocLinks
+        .map(function (a) {
+          const id = (a.getAttribute("href") || "").slice(1);
+          return id ? document.getElementById(id) : null;
+        })
+        .filter(Boolean);
+
+      function updateActiveToc() {
+        const y = window.scrollY + 110;
+        let currentId = sections[0] ? sections[0].id : "";
+        for (let i = 0; i < sections.length; i++) {
+          if (sections[i].offsetTop <= y) {
+            currentId = sections[i].id;
+          }
+        }
+        tocLinks.forEach(function (a) {
+          a.classList.toggle("active", a.getAttribute("href") === "#" + currentId);
+        });
+      }
+      window.addEventListener("scroll", updateActiveToc, { passive: true });
+      updateActiveToc();
+    })();
+  </script>
+</body>
+</html>

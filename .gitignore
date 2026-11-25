@@ -1,0 +1,26 @@
+# Build & generated artifacts
+build/bin/
+frontend/dist/
+frontend/bindings/
+frontend/node_modules/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Portable runtime data & library
+data/
+library/
+.devdata/
+*.db
+*.db-wal
+*.db-shm
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
